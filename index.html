@@ -4,136 +4,61 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Jihyeon's engineering notes on AI, 3D avatars, backend systems, and deployment.">
-  <meta property="og:title" content="Who Am I? — Jihyeon's Engineering Log">
+  <meta property="og:title" content="Jihyeon — AI Engineer">
   <meta property="og:description" content="AI 실험을 실제 서비스로 연결하며 배운 것을 기록합니다.">
-  <meta name="theme-color" content="#111111">
-  <title>Who Am I? — Jihyeon's Engineering Log</title>
+  <meta name="theme-color" content="#0b0d10">
+  <title>Jihyeon — AI Engineer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=2">
   <script src="/script.js" defer></script>
 </head>
 <body class="home-page">
   <header class="site-header">
-    <a class="brand" href="/" aria-label="Who Am I home"><span>WHOAMI</span><i>?</i></a>
-    <nav aria-label="Main navigation">
-      <a class="active" href="/">WRITING</a>
-      <a href="/about.html">ABOUT</a>
-      <a href="https://github.com/who0oami" target="_blank" rel="noreferrer">GITHUB ↗</a>
-    </nav>
-    <span class="header-status"><b></b> AVAILABLE TO BUILD</span>
+    <a class="brand" href="/">JIHYEON<span>.</span></a>
+    <nav aria-label="Main navigation"><a class="active" href="/">Work</a><a href="#writing">Writing</a><a href="/about.html">About</a></nav>
+    <a class="header-link" href="https://github.com/who0oami" target="_blank" rel="noreferrer">GitHub ↗</a>
   </header>
 
   <main>
-    <section class="masthead shell">
-      <div class="masthead-meta">
-        <span>JIHYEON YOO</span>
-        <span>AI SYSTEM BUILDER</span>
-        <span>SEOUL · 2026</span>
-      </div>
-      <h1 aria-label="Who Am I?">
-        <span>WHO</span>
-        <span>AM <em>I?</em></span>
-      </h1>
-      <div class="masthead-bottom">
-        <p>모델을 학습하는 데서 멈추지 않고<br>사용자가 실제로 쓰는 서비스까지 연결합니다.</p>
-        <div class="masthead-index">
-          <span>FIELD NOTES</span>
-          <strong>003</strong>
-          <small>AI · AVATAR · INFRA</small>
-        </div>
-      </div>
+    <section class="hero shell">
+      <div class="hero-status"><span></span>Available for opportunities</div>
+      <h1>AI를 실제 서비스로<br>연결하는 엔지니어.</h1>
+      <p>모델 실험부터 데이터 파이프라인, 3D Avatar, Backend와 배포까지.<br>아이디어가 사용 가능한 제품이 되는 전 과정을 다룹니다.</p>
+      <div class="hero-links"><a class="button primary" href="#work">프로젝트 보기</a><a class="button" href="/about.html">소개 보기</a></div>
     </section>
 
-    <div class="ticker" aria-hidden="true">
-      <div>AI / 3D AVATAR / BACKEND / FFMPEG / LOCAL LLM / KNN / DEPLOYMENT / AI / 3D AVATAR / BACKEND / FFMPEG / LOCAL LLM / KNN / DEPLOYMENT /</div>
-    </div>
-
-    <section class="project-section shell">
-      <div class="section-marker"><span>01</span><b>FEATURED BUILD</b></div>
-      <div class="project-layout">
-        <div class="project-copy">
-          <p class="micro-label">ACCESSIBILITY × GENERATIVE AI</p>
-          <h2>GONG<br>NONG<span>.</span></h2>
-          <p>YouTube 영상의 자막과 음성을 분석해 한국수어 Avatar 영상으로 변환하는 접근성 서비스.</p>
-          <a class="outline-link" href="https://github.com/who0oami/Gongnong" target="_blank" rel="noreferrer">OPEN REPOSITORY <span>↗</span></a>
+    <section class="work-section shell" id="work">
+      <div class="section-head"><div><span class="eyebrow">Selected work</span><h2>공농 · Gongnong</h2></div><a href="https://github.com/who0oami/Gongnong" target="_blank" rel="noreferrer">Repository ↗</a></div>
+      <div class="project-panel">
+        <div class="project-summary">
+          <span class="project-type">AI · 3D AVATAR · VIDEO PIPELINE</span>
+          <h3>YouTube 영상을<br>한국수어 영상으로.</h3>
+          <p>영상의 자막과 음성을 분석해 KSL Gloss로 변환하고, 수어 Avatar 클립을 원본 타이밍에 맞춰 합성하는 콘텐츠 접근성 서비스입니다.</p>
+          <div class="tech-list"><span>FastAPI</span><span>Gemini</span><span>Ollama</span><span>PyTorch</span><span>Blender</span><span>FFmpeg</span><span>AWS S3</span></div>
         </div>
-        <div class="metric-grid">
-          <article class="metric-card mint"><small>RENDER SPEED</small><strong>4×</strong><p>33m → 8m 27s</p></article>
-          <article class="metric-card purple"><small>HAND DATA</small><strong>216K</strong><p>reference frames</p></article>
-          <article class="metric-card orange"><small>NEW ASSETS</small><strong>18</strong><p>consonant signs</p></article>
-          <article class="metric-card terminal">
-            <div class="terminal-top"><span></span><span></span><span></span></div>
-            <code><i>$</i> pipeline.status<br><b>DEPLOYED</b><br><i>$</i> providers<br>gemini · local · mt5</code>
-          </article>
+        <div class="project-results">
+          <p class="results-label">Key outcomes</p>
+          <div class="result-row"><strong>4×</strong><span>FFmpeg 렌더링 속도 개선<br><small>33분 → 8분 27초</small></span></div>
+          <div class="result-row"><strong>216K</strong><span>손 모양 보정 기준 프레임<br><small>1,500개 수어 단어</small></span></div>
+          <div class="result-row"><strong>18</strong><span>신규 자음 Avatar Asset<br><small>WORD3002–3019</small></span></div>
+          <div class="result-row status-row"><strong><i></i>Live</strong><span>Frontend · Backend · S3<br><small>배포 환경 E2E 검증 완료</small></span></div>
         </div>
       </div>
     </section>
 
     <section class="notes-section shell" id="writing">
-      <div class="section-marker"><span>02</span><b>ENGINEERING NOTES</b></div>
-      <div class="notes-heading">
-        <h2>BUILD.<br>BREAK.<br><i>WRITE.</i></h2>
-        <p>완성된 결과만 남기지 않습니다.<br>실패한 모델, 바꾼 판단, 배포에서 마주친 문제까지 기록합니다.</p>
-      </div>
-
-      <div class="filter-row" aria-label="Filter posts">
-        <button class="filter active" data-filter="all">ALL / 03</button>
-        <button class="filter" data-filter="ai">AI + LLM</button>
-        <button class="filter" data-filter="infra">INFRA</button>
-        <button class="filter" data-filter="avatar">3D AVATAR</button>
-      </div>
-
+      <div class="section-head"><div><span class="eyebrow">Engineering notes</span><h2>작업하며 배운 것들</h2></div><p>결과뿐 아니라 실패한 시도와 판단의 근거를 기록합니다.</p></div>
+      <div class="filter-row" aria-label="Filter posts"><button class="filter active" data-filter="all">전체 3</button><button class="filter" data-filter="ai">AI · LLM</button><button class="filter" data-filter="infra">Infrastructure</button><button class="filter" data-filter="avatar">3D Avatar</button></div>
       <div class="story-stream">
-        <a class="story-card story-mint" data-category="ai" href="/posts/gemini-to-local-llm.html">
-          <div class="story-rail"><span>001</span><time datetime="2026-10-08">OCT 08</time></div>
-          <div class="story-body">
-            <span class="story-tag">AI / LLM</span>
-            <h3>Gemini에서<br>Local LLM까지</h3>
-            <p>API 비용 문제로 mT5를 직접 학습하고, 한계를 확인한 뒤 Ollama/Qwen으로 전환한 기록.</p>
-            <b class="story-arrow">READ NOTE ↗</b>
-          </div>
-        </a>
-
-        <a class="story-card story-purple" data-category="infra" href="/posts/render-ffmpeg.html">
-          <div class="story-rail"><span>002</span><time datetime="2026-10-08">OCT 08</time></div>
-          <div class="story-body">
-            <span class="story-tag">INFRA / VIDEO</span>
-            <h3>33분을<br>8분 27초로</h3>
-            <p>Render 무료 서버에서 LLM보다 느렸던 FFmpeg 병목을 추적하고 네 배 빠르게 만든 과정.</p>
-            <b class="story-arrow">READ NOTE ↗</b>
-          </div>
-        </a>
-
-        <a class="story-card story-orange" data-category="avatar" href="/posts/knn-hand-correction.html">
-          <div class="story-rail"><span>003</span><time datetime="2026-10-08">OCT 08</time></div>
-          <div class="story-body">
-            <span class="story-tag">AI / 3D AVATAR</span>
-            <h3>손 모양을<br>KNN으로 고치기</h3>
-            <p>21.6만 손 프레임으로 수어 Avatar를 보정하고 미지원 자음 18종을 제작한 과정.</p>
-            <b class="story-arrow">READ NOTE ↗</b>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <section class="manifesto">
-      <div class="shell">
-        <p class="micro-label">CURRENTLY</p>
-        <h2>TURNING FAILED<br>EXPERIMENTS INTO<br><span>BETTER SYSTEMS.</span></h2>
-        <div class="manifesto-links">
-          <a href="/about.html">MORE ABOUT ME ↗</a>
-          <a href="https://github.com/who0oami" target="_blank" rel="noreferrer">FOLLOW THE CODE ↗</a>
-        </div>
+        <a class="post-card" data-category="ai" href="/posts/gemini-to-local-llm.html"><div class="post-meta"><span>AI · LLM</span><time datetime="2026-10-08">2026.10.08</time></div><h3>Gemini에서 Local LLM까지</h3><p>API 비용 문제로 mT5를 직접 학습하고, 한계를 확인한 뒤 Ollama/Qwen으로 전환한 기록.</p><span class="post-arrow">읽어보기 ↗</span></a>
+        <a class="post-card" data-category="infra" href="/posts/render-ffmpeg.html"><div class="post-meta"><span>INFRA · VIDEO</span><time datetime="2026-10-08">2026.10.08</time></div><h3>33분을 8분 27초로</h3><p>Render 무료 서버에서 FFmpeg 병목을 추적하고 네 배 빠르게 만든 과정.</p><span class="post-arrow">읽어보기 ↗</span></a>
+        <a class="post-card" data-category="avatar" href="/posts/knn-hand-correction.html"><div class="post-meta"><span>AI · 3D AVATAR</span><time datetime="2026-10-08">2026.10.08</time></div><h3>손 모양을 KNN으로 보정하기</h3><p>21.6만 손 프레임으로 Avatar를 보정하고 미지원 자음 18종을 제작한 과정.</p><span class="post-arrow">읽어보기 ↗</span></a>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer shell">
-    <a class="brand" href="/"><span>WHOAMI</span><i>?</i></a>
-    <p>BUILT FROM EXPERIMENTS, FAILURES,<br>AND SMALL WINS.</p>
-    <div><span>© 2026 JIHYEON</span><a href="https://github.com/who0oami" target="_blank" rel="noreferrer">@WHO0OAMI ↗</a></div>
-  </footer>
+  <footer class="site-footer shell"><a class="brand" href="/">JIHYEON<span>.</span></a><p>AI systems, built through experiments.</p><div><span>© 2026</span><a href="https://github.com/who0oami" target="_blank" rel="noreferrer">GitHub ↗</a></div></footer>
 </body>
 </html>
