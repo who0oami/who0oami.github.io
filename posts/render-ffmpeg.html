@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Render 무료 인스턴스에서 FFmpeg 영상 합성 시간을 33분에서 8분 27초로 줄인 과정.">
+  <title>Render에서 FFmpeg를 4배 빠르게 — Who Am I?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/"><span>whoami</span><i>?</i></a><nav><a href="/">Writing</a><a href="/about.html">About</a><a href="https://github.com/who0oami" target="_blank" rel="noreferrer">GitHub ↗</a></nav></header>
+  <main class="article-shell">
+    <header class="article-head"><span class="tag infra">INFRA / VIDEO</span><h1>Render 무료 서버에서 FFmpeg를 4배 빠르게 만들기</h1><p class="lead">약 3분짜리 결과 영상을 만드는 데 33분이 걸렸다. LLM보다 느렸던 영상 합성 병목을 측정하고 줄인 과정이다.</p><time datetime="2026-10-08">2026.10.08 · 6 min read</time></header>
+    <article class="article">
+      <h2>기능은 완성됐지만 기다릴 수 없었다</h2>
+      <p>YouTube 자막 수집, Gloss 변환, 수어 Asset 매핑까지는 정상적으로 동작했다. 문제는 마지막 FFmpeg 합성이었다. Render 무료 인스턴스의 0.1 CPU와 512MB 메모리에서 약 3분 영상을 처리하니 전체 완료까지 약 33분이 걸렸다.</p>
+      <div class="result-box"><div><strong>3 min</strong><span>source video</span></div><div><strong>33 min</strong><span>before</span></div><div><strong>8m 27s</strong><span>after</span></div></div>
+      <h2>먼저 단계별 시간을 나눴다</h2>
+      <p>느리다는 느낌만으로 코드를 바꾸지 않고 자막, Gloss, S3, Timeline, FFmpeg 단계에 측정 지점을 추가했다. 가장 큰 비중은 LLM 호출이 아니라 수어 클립을 반복해서 분석하고 재인코딩하는 과정이었다.</p>
+      <h2>1. 준비된 클립을 다시 인코딩하지 않기</h2>
+      <p>S3의 수어 클립은 대부분 1080p, 30fps, 무음 영상으로 이미 표준화돼 있었다. 그런데 기존 코드는 모든 클립을 다시 360p로 변환했다. ffprobe로 concat 가능 여부만 확인하고 조건이 맞는 클립은 <code>-c copy</code>로 연결하도록 변경했다.</p>
+      <h2>2. 같은 작업을 캐시하기</h2>
+      <p>같은 수어 단어가 여러 번 등장할 때마다 메타데이터 조회와 정규화를 반복하지 않도록 Job 단위 캐시를 만들었다.</p>
+      <ul><li>ffprobe 결과 캐시</li><li>정규화된 클립 캐시</li><li>같은 길이의 Idle 영상 캐시</li><li>중복 WORD Asset 다운로드 방지</li></ul>
+      <h2>3. FFmpeg 실행 횟수 줄이기</h2>
+      <p>각 단어와 Segment마다 별도 프로세스를 실행하면 저사양 CPU에서는 프로세스 생성 비용도 무시할 수 없었다. 인접한 수어 구간을 묶고, Segment 내부 클립을 먼저 연결한 뒤 최종 결과를 한 번 더 합치는 구조로 바꿨다.</p>
+      <h2>4. 무료 인스턴스에서 안전하게 실행하기</h2>
+      <p>속도만 높이고 동시에 여러 Job을 렌더링하면 512MB 메모리를 넘을 수 있었다. 렌더링 동시 실행은 하나로 제한하고, FFmpeg에는 <code>ultrafast</code>, 단일 thread, timeout을 적용했다. ffprobe의 패킷 전체 조회도 제거했다.</p>
+      <h2>결과 파일도 S3로 이동했다</h2>
+      <p>Render의 로컬 디스크에 만든 MP4는 재배포 시 사라졌다. DB에는 완료로 남지만 재생 URL은 404가 됐다. 완성 파일을 S3의 <code>results/{job_id}.mp4</code>에 업로드하고 Backend API가 서명 URL로 리다이렉트하도록 변경했다.</p>
+      <h2>측정 결과</h2>
+      <p>같은 약 3분 영상의 전체 처리 시간이 33분에서 8분 27초로 줄었다. 목표였던 10~15분 안쪽에 들어왔고, 메모리 초과 없이 S3 저장까지 끝났다.</p>
+      <blockquote><p>저사양 환경에서는 더 빠른 알고리즘만큼 하지 않아도 되는 작업을 찾는 것이 중요했다.</p></blockquote>
+    </article><a class="back-link" href="/">← Back to all notes</a>
+  </main>
+  <footer class="site-footer shell"><a class="brand" href="/"><span>whoami</span><i>?</i></a><p>Built from experiments, failures, and small wins.</p><a href="https://github.com/who0oami">@who0oami</a></footer>
+</body></html>
