@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="유지현의 AI·3D Avatar·Backend 개발 기록.">
-  <meta property="og:title" content="Jihyeon's Notes"><meta property="og:description" content="실험을 서비스로 연결하며 배운 것을 기록합니다.">
-  <meta name="theme-color" content="#f6f2ea"><title>Jihyeon's Notes</title>
+  <meta property="og:title" content="Who Am I? — who0oami"><meta property="og:description" content="유지현의 개발 기록. 직접 만들고 고친 과정을 씁니다.">
+  <meta name="theme-color" content="#ffffff"><title>Who Am I? — who0oami</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css?v=5"><script src="/script.js" defer></script>
+  <link rel="stylesheet" href="/styles.css?v=7"><script src="/script.js" defer></script>
 </head>
 <body class="home-page blog-home">
   <header class="site-header">
-    <a class="brand" href="/"><b>J</b><span>Jihyeon's Notes</span></a>
+    <a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a>
     <nav aria-label="Main navigation"><a class="active" href="/">글</a><a href="#project">프로젝트</a><a href="/about.html">소개</a></nav>
     <a class="header-link" href="https://github.com/who0oami" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
   </header>
@@ -19,10 +19,10 @@
   <main>
     <section class="blog-intro shell">
       <div>
-        <p class="blog-kicker">ENGINEERING BLOG</p>
-        <h1>만들고, 부딪히고,<br><em>배운 것을 기록합니다.</em></h1>
+        <p class="blog-kicker">WHO0OAMI · ENGINEERING LOG</p>
+        <h1>Who Am I?<br><em>만든 것으로 답합니다.</em></h1>
       </div>
-      <p>AI 모델 실험부터 3D Avatar, 영상 처리, Backend와 배포까지. 실제 서비스로 연결하는 과정에서 만난 문제와 해결 방법을 씁니다.</p>
+      <div class="intro-note"><span>유지현 · Jihyeon Yoo</span><p>모델을 돌리는 데서 멈추지 않고, 화면에 결과가 나올 때까지 만듭니다. 여기에는 그 과정에서 막혔던 부분과 실제로 고친 방법을 남깁니다.</p><a href="https://github.com/who0oami" target="_blank" rel="noreferrer">github.com/who0oami ↗</a></div>
     </section>
 
     <section class="featured-post shell" aria-labelledby="featured-title">
@@ -36,7 +36,7 @@
         <div class="featured-copy">
           <p>Render 무료 서버 최적화</p>
           <h2 id="featured-title">FFmpeg 영상 변환 시간을<br>33분에서 8분 27초로 줄이기</h2>
-          <span>LLM보다 느렸던 영상 합성 병목을 측정하고, 재인코딩과 반복 작업을 줄여 약 네 배 개선한 과정입니다.</span>
+          <span>처음에는 LLM이 느린 줄 알았습니다. 시간을 직접 재보니 문제는 FFmpeg였습니다. 다시 인코딩하던 구간과 반복 작업을 걷어낸 과정을 정리했습니다.</span>
           <b>글 읽기 <i>↗</i></b>
         </div>
       </a>
@@ -47,20 +47,20 @@
         <div class="list-heading"><div><span>Recent notes</span><h2>최근 글</h2></div><p>총 3개의 기록</p></div>
         <div class="filter-row blog-filters" aria-label="글 분류"><button class="filter active" data-filter="all">전체</button><button class="filter" data-filter="ai">AI · LLM</button><button class="filter" data-filter="infra">Infrastructure</button><button class="filter" data-filter="avatar">3D Avatar</button></div>
         <div class="post-list story-stream">
-          <a class="post-card blog-post" data-category="ai" href="/posts/gemini-to-local-llm.html"><div class="post-date"><strong>08</strong><span>OCT<br>2026</span></div><div class="post-info"><span>AI · LLM</span><h3>Gemini에서 Local LLM까지</h3><p>API 비용 문제로 mT5를 직접 학습하고, 한계를 확인한 뒤 Ollama/Qwen으로 전환한 기록.</p><div><time>7분 읽기</time><b>↗</b></div></div></a>
-          <a class="post-card blog-post" data-category="infra" href="/posts/render-ffmpeg.html"><div class="post-date"><strong>08</strong><span>OCT<br>2026</span></div><div class="post-info"><span>INFRA · VIDEO</span><h3>33분을 8분 27초로</h3><p>Render 무료 서버에서 FFmpeg 병목을 추적하고 영상 합성 속도를 약 네 배 개선한 과정.</p><div><time>6분 읽기</time><b>↗</b></div></div></a>
-          <a class="post-card blog-post" data-category="avatar" href="/posts/knn-hand-correction.html"><div class="post-date"><strong>08</strong><span>OCT<br>2026</span></div><div class="post-info"><span>AI · 3D AVATAR</span><h3>손 모양을 KNN으로 보정하기</h3><p>21.6만 손 프레임으로 수어 Avatar를 보정하고 미지원 자음 18종을 제작한 과정.</p><div><time>6분 읽기</time><b>↗</b></div></div></a>
+          <a class="post-card blog-post" data-category="ai" href="/posts/gemini-to-local-llm.html"><div class="post-date"><strong>08</strong><span>OCT<br>2026</span></div><div class="post-info"><span>AI · LLM</span><h3>Gemini 대신 직접 모델을 만들면 될까?</h3><p>API 비용 때문에 mT5를 학습했다. 결과는 기대와 달랐고, 결국 Ollama/Qwen까지 비교해 봤다.</p><div><time>10분 읽기</time><b>↗</b></div></div></a>
+          <a class="post-card blog-post" data-category="infra" href="/posts/render-ffmpeg.html"><div class="post-date"><strong>08</strong><span>OCT<br>2026</span></div><div class="post-info"><span>INFRA · VIDEO</span><h3>3분 영상이 나오기까지 33분</h3><p>Render 로그를 단계별로 뜯어보고, FFmpeg가 반복하던 일을 줄여 8분 27초까지 낮췄다.</p><div><time>9분 읽기</time><b>↗</b></div></div></a>
+          <a class="post-card blog-post" data-category="avatar" href="/posts/knn-hand-correction.html"><div class="post-date"><strong>08</strong><span>OCT<br>2026</span></div><div class="post-info"><span>AI · 3D AVATAR</span><h3>KNN을 붙였는데 손 모양이 더 나빠졌다</h3><p>단순 KNN의 실패부터 방향 검증 보정, 자음 18종 Asset 제작까지 직접 비교한 기록.</p><div><time>9분 읽기</time><b>↗</b></div></div></a>
         </div>
       </div>
 
       <aside class="blog-sidebar">
-        <section class="profile-card"><div class="profile-mark">J</div><p class="profile-name">유지현 <span>Jihyeon Yoo</span></p><p>AI 실험을 실제 사용자가 만나는 서비스까지 연결합니다.</p><div class="profile-tags"><span>AI</span><span>3D Avatar</span><span>Backend</span><span>Video</span></div><a href="/about.html">더 알아보기 →</a></section>
+        <section class="profile-card"><div class="profile-id"><div class="profile-mark">W</div><code>@who0oami</code></div><p class="profile-name">유지현 <span>Jihyeon Yoo</span></p><p>AI·3D 실험을 실제로 실행되는 서비스까지 연결하고 있습니다.</p><div class="profile-tags"><span>AI</span><span>3D Avatar</span><span>Backend</span><span>Video</span></div><a href="https://github.com/who0oami" target="_blank" rel="noreferrer">GitHub에서 코드 보기 →</a></section>
         <section class="project-mini" id="project"><p class="aside-label">CURRENT PROJECT</p><h3>공농 · Gongnong</h3><p>YouTube 영상을 한국수어 Avatar 영상으로 변환하는 접근성 서비스입니다.</p><dl><div><dt>렌더링</dt><dd>33분 → 8분 27초</dd></div><div><dt>손 데이터</dt><dd>216K 프레임</dd></div><div><dt>신규 Asset</dt><dd>자음 18종</dd></div></dl><a href="https://github.com/who0oami/Gongnong" target="_blank" rel="noreferrer">Repository ↗</a></section>
         <section class="topic-card"><p class="aside-label">TOPICS</p><a href="#writing">AI / LLM <span>1</span></a><a href="#writing">Infrastructure <span>1</span></a><a href="#writing">3D Avatar <span>1</span></a></section>
       </aside>
     </section>
   </main>
 
-  <footer class="site-footer"><div class="shell"><a class="brand" href="/"><b>J</b><span>Jihyeon's Notes</span></a><p>배운 것을 기록하고, 다음 문제를 더 잘 풉니다.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
+  <footer class="site-footer"><div class="shell"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><p>직접 만들고 고친 과정을 기록합니다.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
 </body>
 </html>

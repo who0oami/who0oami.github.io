@@ -5,22 +5,22 @@
   <meta name="description" content="Render 무료 인스턴스에서 FFmpeg 영상 합성 시간을 33분에서 8분 27초로 줄인 과정.">
   <title>Render에서 FFmpeg를 4배 빠르게 — Who Am I?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=6"><script src="/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=7"><script src="/script.js" defer></script>
 </head>
 <body class="article-page article-infra">
   <div class="reading-progress" aria-hidden="true"></div>
-  <header class="site-header"><a class="brand" href="/"><b>J</b><span>Jihyeon Yoo</span></a><nav><a href="/">Work</a><a href="/#writing">Notes</a><a href="/about.html">About</a></nav><a class="header-link" href="https://github.com/who0oami">GitHub ↗</a></header>
+  <header class="site-header"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><nav><a href="/">Work</a><a href="/#writing">Notes</a><a href="/about.html">About</a></nav><a class="header-link" href="https://github.com/who0oami">GitHub ↗</a></header>
   <main class="article-shell">
-    <header class="article-head"><span class="tag infra">INFRA / VIDEO</span><h1>Render 무료 서버에서 FFmpeg를 4배 빠르게 만들기</h1><p class="lead">약 3분짜리 결과 영상을 만드는 데 33분이 걸렸다. LLM보다 느렸던 영상 합성 병목을 측정하고 S3 재생까지 안정화한 과정이다.</p><time datetime="2026-10-08">2026.10.08 · 9 min read</time></header>
+    <header class="article-head"><span class="tag infra">INFRA / VIDEO</span><h1>3분 영상이 나오기까지 33분이 걸렸다</h1><p class="lead">변환은 성공했지만 기다리기에는 너무 길었다. 어디서 시간이 새는지 직접 재고, Render 무료 서버에서 8분 27초까지 줄였다.</p><time datetime="2026-10-08">2026.10.08 · 유지현 · 9 min read</time></header>
     <article class="article">
-      <h2>기능은 완성됐지만 기다릴 수 없었다</h2>
-      <p>YouTube 자막 수집, Gloss 변환, 수어 Asset 매핑까지는 정상적으로 동작했다. 문제는 마지막 FFmpeg 합성이었다. Render 무료 인스턴스의 0.1 CPU와 512MB 메모리에서 약 3분 영상을 처리하니 전체 완료까지 약 33분이 걸렸다.</p>
+      <h2>완료는 떴는데 33분이 지나 있었다</h2>
+      <p>YouTube 자막도 가져왔고, Gloss와 수어 Asset도 제대로 매칭됐다. 끝까지 실행하면 결과 영상도 나왔다. 다만 약 3분짜리 영상을 한 번 만드는 데 33분이 걸렸다. Render 무료 인스턴스는 0.1 CPU, 512MB라 로컬에서 괜찮았던 코드가 그대로 버티지 못했다.</p>
       <div class="result-box"><div><strong>3 min</strong><span>source video</span></div><div><strong>33 min</strong><span>before</span></div><div><strong>8m 27s</strong><span>after</span></div></div>
       <figure class="article-figure"><img src="/assets/case-study/architecture.png" alt="Frontend, FastAPI Backend, AI 수어 처리 파이프라인, S3로 구성된 서비스 아키텍처"><figcaption>사용자 요청은 비동기 Job으로 처리한다. 자막·Gloss·Motion 매칭을 거쳐 FFmpeg가 영상을 만들고, 결과는 S3 서명 URL로 재생한다.</figcaption></figure>
-      <h2>먼저 단계별 시간을 나눴다</h2>
-      <p>느리다는 느낌만으로 코드를 바꾸지 않고 자막, Gloss, S3, Timeline, FFmpeg 단계에 측정 지점을 추가했다. 가장 큰 비중은 LLM 호출이 아니라 수어 클립을 반복해서 분석하고 재인코딩하는 과정이었다.</p>
+      <h2>일단 시간을 나눠서 재봤다</h2>
+      <p>처음에는 Gemini 호출이 느린 줄 알았다. 자막, Gloss, S3, Timeline, FFmpeg 앞뒤에 시간을 찍어 보니 예상이 틀렸다. 같은 수어 클립을 계속 ffprobe로 읽고, 이미 규격이 맞는 영상까지 다시 인코딩하는 구간이 대부분을 차지했다.</p>
       <h2>1. 준비된 클립을 다시 인코딩하지 않기</h2>
-      <p>S3의 수어 클립은 대부분 1080p, 30fps, 무음 영상으로 이미 표준화돼 있었다. 그런데 기존 코드는 모든 클립을 다시 360p로 변환했다. ffprobe로 concat 가능 여부만 확인하고 조건이 맞는 클립은 <code>-c copy</code>로 연결하도록 변경했다.</p>
+      <p>S3 클립은 이미 1080p, 30fps, 무음으로 맞춰져 있었다. 그런데 합칠 때마다 전부 다시 인코딩하고 있었다. ffprobe로 꼭 필요한 항목만 확인하고 규격이 맞으면 <code>-c copy</code>로 바로 연결했다. 가장 큰 시간 절약은 새로운 알고리즘이 아니라 쓸데없는 작업을 빼는 데서 나왔다.</p>
       <div class="code-window"><div class="code-window__bar"><i></i><i></i><i></i><span>video merger optimization · simplified</span></div><pre><code>ready = is_clip_concat_ready(probe_clip(src, probe_cache))
 normalized_cache[src] = src <span class="code-key">if</span> ready <span class="code-key">else</span> normalize_clip(src)
 
@@ -46,7 +46,7 @@ return s3.generate_presigned_url(
       <figure class="article-figure"><img src="/assets/case-study/troubleshooting.png" alt="수어 Asset 부족, YouTube API 전환, Gemini 429 오류의 원인과 해결 과정"><figcaption>기능 구현 뒤 실제 배포에서 드러난 세 가지 문제. Asset 미매칭은 캡션으로 보존하고, YouTube 데이터 경로와 Gemini 호출 구조는 실패 원인에 맞춰 분리했다.</figcaption></figure>
       <h2>측정 결과</h2>
       <p>같은 약 3분 영상의 전체 처리 시간이 33분에서 8분 27초로 줄었다. 목표였던 10~15분 안쪽에 들어왔고, 메모리 초과 없이 S3 저장까지 끝났다.</p>
-      <blockquote><p>저사양 환경에서는 더 빠른 알고리즘만큼 하지 않아도 되는 작업을 찾는 것이 중요했다.</p></blockquote>
+      <blockquote><p>무료 서버에서 가장 효과가 컸던 최적화는, 더 빨리 하는 코드가 아니라 아예 하지 않아도 되는 일을 찾는 것이었다.</p></blockquote>
       <div class="evidence-note"><strong>같은 입력으로 전후를 비교했다.</strong><p>동일한 약 3분 영상에서 33분 → 8분 27초를 확인했고, 변환 완료·S3 업로드·307 리다이렉트·실제 <code>video/mp4</code> 응답까지 배포 환경에서 검증했다.</p></div>
     </article><a class="back-link" href="/">← Back to all notes</a>
   </main>

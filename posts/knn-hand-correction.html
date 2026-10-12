@@ -5,26 +5,26 @@
   <meta name="description" content="21.6만 손 프레임 기반 KNN 보정으로 수어 Avatar 자음 18종을 제작한 과정.">
   <title>KNN 수어 손 모양 보정 — Who Am I?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=6"><script src="/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=7"><script src="/script.js" defer></script>
 </head>
 <body class="article-page article-avatar">
   <div class="reading-progress" aria-hidden="true"></div>
-  <header class="site-header"><a class="brand" href="/"><b>J</b><span>Jihyeon Yoo</span></a><nav><a href="/">Work</a><a href="/#writing">Notes</a><a href="/about.html">About</a></nav><a class="header-link" href="https://github.com/who0oami">GitHub ↗</a></header>
+  <header class="site-header"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><nav><a href="/">Work</a><a href="/#writing">Notes</a><a href="/about.html">About</a></nav><a class="header-link" href="https://github.com/who0oami">GitHub ↗</a></header>
   <main class="article-shell">
-    <header class="article-head"><span class="tag avatar">AI / 3D AVATAR</span><h1>수어 Avatar의 손 모양을 KNN으로 보정한 과정</h1><p class="lead">기존 3D 수어 데이터에서 손 형태의 기준을 만들고, 단순 KNN이 악화시킨 방향 오차까지 추적해 미지원 자음 18종을 Asset으로 제작했다.</p><time datetime="2026-10-08">2026.10.08 · 9 min read</time></header>
+    <header class="article-head"><span class="tag avatar">AI / 3D AVATAR</span><h1>KNN을 붙였는데 손 모양이 더 나빠졌다</h1><p class="lead">수어 Avatar의 손가락이 자꾸 뒤집혔다. 기준 자세를 찾아 주면 나아질 줄 알았는데, 첫 KNN 결과는 오히려 더 안 좋았다.</p><time datetime="2026-10-08">2026.10.08 · 유지현 · 9 min read</time></header>
     <article class="article">
-      <h2>몸 동작보다 손가락이 어려웠다</h2>
-      <p>수어 영상에서 신체와 손 키포인트를 추출해 Avatar에 적용하면 팔과 몸의 큰 움직임은 비교적 잘 보였다. 하지만 손가락은 작은 좌표 오차에도 모양이 크게 달라졌고, 가려짐이나 검출 실패가 발생한 프레임에서는 손이 순간적으로 뒤집히거나 접혔다.</p>
+      <h2>문제는 몸이 아니라 손가락이었다</h2>
+      <p>영상에서 뽑은 키포인트를 Avatar에 넣자 팔과 몸은 생각보다 잘 따라왔다. 문제는 손이었다. 좌표가 조금만 흔들려도 손가락이 크게 꺾였고, 손이 가려진 프레임에서는 방향까지 뒤집혔다. 수어에서는 손 모양 자체가 의미라서 그냥 넘길 수 없었다.</p>
       <figure class="article-figure"><img src="/assets/case-study/motion-landmarks.png" alt="수어 원본 영상에서 3D 랜드마크를 추출하고 좌표를 정제해 Blender 아바타에 리타게팅하는 과정"><figcaption>원본 영상 → 3D 랜드마크 → 좌표 정제 → Blender 리타게팅. 발표 자료의 모션 생성 파이프라인을 실제 구현 단계에 맞춰 정리했다.</figcaption></figure>
       <h2>보정용 기준 데이터 만들기</h2>
-      <p>기존 3D 수어 데이터셋에서 1,500개 단어와 약 21.6만 손 프레임을 추출했다. 손목을 기준으로 좌표를 정규화하고, 손의 크기와 방향 차이를 줄여 손 모양 자체를 비교할 수 있게 전처리했다.</p>
+      <p>새 데이터를 처음부터 찍는 대신 기존 3D 수어 데이터셋을 다시 꺼냈다. 1,500개 단어, 약 21.6만 손 프레임에서 손 좌표만 추렸다. 손목을 원점으로 맞추고 크기 차이를 줄여야 사람과 촬영 각도가 달라도 손 모양끼리 비교할 수 있었다.</p>
       <ul><li>누락된 손 랜드마크 재검출</li><li>좌우 손 identity 유지</li><li>프레임 사이의 급격한 이동 스무딩</li><li>손목 기준 상대 좌표 정규화</li><li>손가락 방향과 회전 보정</li></ul>
       <h2>BiGRU와 KNN을 함께 비교했다</h2>
-      <p>먼저 합성 노이즈와 실제 추출–정답 Pair를 이용해 BiGRU 손 모션 디노이저를 학습했다. 시계열 전체를 보고 흔들림을 줄일 수 있다는 장점이 있었지만 데이터 분포와 학습 조건에 따라 결과 편차가 컸다.</p>
-      <p>KNN은 현재 손 형태와 가까운 기준 프레임을 찾아 보정하는 방식이다. 복잡한 학습 없이 기준 데이터가 추가되면 바로 반영할 수 있고, 어떤 프레임을 참고했는지 추적하기 쉬웠다. 제한된 일정과 데이터에서 결과를 비교·검증하기에 더 적합해 최종 보정 과정에 사용했다.</p>
+      <p>처음에는 BiGRU 디노이저를 학습했다. 합성 노이즈 데이터와 실제 추출–정답 Pair를 함께 넣었지만, 데이터 분포가 조금만 달라져도 결과 편차가 컸다. 학습 로그는 좋아 보여도 Blender에서 보면 손가락이 다시 무너지는 경우가 있었다.</p>
+      <p>그래서 가까운 기준 손 자세를 바로 찾아오는 KNN도 붙였다. 어느 프레임을 참고했는지 눈으로 확인할 수 있고, 기준 데이터를 추가하면 재학습 없이 반영되는 점이 당시 일정에는 더 잘 맞았다.</p>
       <figure class="article-figure"><img src="/assets/case-study/motion-training.png" alt="아바타 손가락 왜곡 문제와 원인 분석, KNN 보정 전후 비교"><figcaption>보정 전에는 손가락이 비정상적으로 접히거나 방향이 틀어졌다. 좌표를 바로 회전값으로 바꾸는 과정과 학습 데이터의 불안정성을 분리해 확인했다.</figcaption></figure>
       <h2>단순 KNN은 오히려 나빠졌다</h2>
-      <p>가장 가까운 기준 자세를 그대로 섞으면 손 모양은 그럴듯해져도 원본 영상이 가진 손가락 방향에서 멀어질 수 있었다. 18개 자음 클립을 같은 조건으로 측정했을 때 Baseline의 평균 방향 오차는 27.98°였지만, 단순 KNN은 29.13°로 악화됐다.</p>
+      <p>그런데 첫 결과는 예상과 반대였다. 가까운 자세를 그대로 섞으니 모양은 얼핏 자연스러워도 원본 손가락 방향과 멀어졌다. 자음 18개를 같은 조건으로 재보니 Baseline 오차는 27.98°, 단순 KNN은 29.13°였다. 숫자로도 더 나빠진 게 확인됐다.</p>
       <p>최종 보정은 KNN 후보와 관측 자세의 방향 일치도를 다시 비교했다. KNN이 원본 관측보다 나쁜 관절은 교체하지 않고, 허용 가능한 회전량 안에서만 반영했다. 그 결과 평균 오차가 20.69°로 낮아졌고 18개 클립 모두에서 Baseline과 단순 KNN보다 개선됐다.</p>
       <div class="result-box result-four"><div><strong>27.98°</strong><span>baseline error</span></div><div><strong>29.13°</strong><span>plain KNN</span></div><div class="result-best"><strong>20.69°</strong><span>verified correction</span></div><div><strong>18 / 18</strong><span>clips improved</span></div></div>
       <div class="code-window"><div class="code-window__bar"><i></i><i></i><i></i><span>experiments/consonants_knn_jihyeon_v1/process_clip.py · excerpt</span></div><pre><code>q = poses[n].copy()
@@ -45,7 +45,7 @@ baseline_q = original[frame][n].to_quaternion().normalized()
       <p>완성 영상뿐 아니라 다시 수정할 수 있는 Blender 파일과 중간 키포인트를 분리해 저장하고, 프레임 수가 유지됐는지도 별도로 검증했다.</p>
       <h2>배운 점</h2>
       <p>3D 좌표의 수치 오차가 작아도 사람은 손가락 방향의 이상을 바로 알아챈다. 평균 오차만 비교해서는 충분하지 않았고, 렌더링 결과를 같은 구간에서 반복해서 보는 과정이 꼭 필요했다.</p>
-      <blockquote><p>모션 품질은 모델 하나로 끝나지 않았다. 데이터 정리, 좌표계, 손 identity, 리타게팅과 시각 검증이 함께 맞아야 했다.</p></blockquote>
+      <blockquote><p>KNN을 썼다는 사실보다, 틀린 보정을 걸러낼 기준을 만든 일이 더 중요했다.</p></blockquote>
       <div class="evidence-note"><strong>이 글의 수치는 저장된 실험 결과에서 가져왔다.</strong><p><code>experiments/consonants_knn_jihyeon_v1/summary.json</code>의 18개 클립·1,454프레임 결과를 사용했다. 화면 예시는 프로젝트 발표 자료의 모션 보정 섹션이다.</p></div>
     </article><a class="back-link" href="/">← Back to all notes</a>
   </main>
