@@ -89,3 +89,20 @@ body{background:#fff;font-family:"Inter","Noto Sans KR",sans-serif}
 .article blockquote{border-left-color:#3182f6;background:#f2f7ff}
 .article code{color:#1b64da;background:#e8f3ff}
 .reading-progress{background:#3182f6}
+
+/* Case-study articles */
+.article-figure{width:min(1040px,calc(100vw - 48px));margin:44px 50%;transform:translateX(-50%)}
+.article-figure img{display:block;width:100%;height:auto;border:1px solid #e5e8eb;border-radius:14px;background:#f7faf9;box-shadow:0 14px 36px rgba(25,31,40,.07)}
+.article-figure figcaption{margin-top:11px;color:#8b95a1;font:12px/1.65 "Noto Sans KR",sans-serif;text-align:center}
+.article .code-window{margin:34px 0;border:1px solid #29313d;border-radius:12px;overflow:hidden;background:#151a22;box-shadow:0 16px 34px rgba(25,31,40,.12)}
+.code-window__bar{display:flex;align-items:center;gap:7px;padding:11px 15px;border-bottom:1px solid #29313d;background:#1c222c}
+.code-window__bar i{width:8px;height:8px;border-radius:50%;background:#657080}
+.code-window__bar span{margin-left:8px;color:#98a2b3;font:10px/1 "JetBrains Mono",monospace}
+.article .code-window pre{margin:0;padding:22px 24px;overflow:auto;color:#d8dee9;font:12px/1.75 "JetBrains Mono",monospace;white-space:pre}
+.article .code-window code{padding:0;color:inherit;background:none;font:inherit}
+.code-key{color:#79b8ff}.code-string{color:#a7d7a9}.code-comment{color:#7f8a9a}
+.evidence-note{margin:34px 0;padding:24px 26px;border:1px solid #dbe7f7;border-radius:12px;background:#f7faff}
+.evidence-note strong{display:block;margin-bottom:8px;color:#191f28;font-size:15px}.evidence-note p{margin:0;color:#4e5968;font-size:14px;line-height:1.8}
+.result-box.result-four{grid-template-columns:repeat(4,1fr)}
+.result-box .result-best{background:#eef6ff}.result-box .result-best strong{color:#1b64da}
+@media(max-width:700px){.article-figure{width:calc(100vw - 24px);margin-block:34px}.article-figure img{border-radius:9px}.article .code-window pre{padding:18px 16px;font-size:10.5px}.result-box.result-four{grid-template-columns:1fr 1fr}.result-box.result-four div:nth-child(2){border-right:0}.result-box.result-four div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
