@@ -5,7 +5,7 @@
   <meta name="description" content="Render 무료 인스턴스에서 FFmpeg 영상 합성 시간을 33분에서 8분 27초로 줄인 과정.">
   <title>Render에서 FFmpeg를 4배 빠르게 — Who Am I?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=7"><script src="/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=8"><script src="/script.js" defer></script>
 </head>
 <body class="article-page article-infra">
   <div class="reading-progress" aria-hidden="true"></div>
@@ -44,11 +44,11 @@ return s3.generate_presigned_url(
       <h2>배포 환경에서 함께 해결한 문제</h2>
       <p>Render 서버 IP에서는 YouTube 자막 조회가 차단될 수 있었다. 해당 오류만 감지해 Gemini가 공개 영상의 음성을 직접 전사하도록 Fallback을 추가했다. 로컬의 AWS CLI 프로필도 컨테이너에는 없기 때문에 Render에서는 환경변수 기반 인증을 우선 사용했다.</p>
       <figure class="article-figure"><img src="/assets/case-study/troubleshooting.png" alt="수어 Asset 부족, YouTube API 전환, Gemini 429 오류의 원인과 해결 과정"><figcaption>기능 구현 뒤 실제 배포에서 드러난 세 가지 문제. Asset 미매칭은 캡션으로 보존하고, YouTube 데이터 경로와 Gemini 호출 구조는 실패 원인에 맞춰 분리했다.</figcaption></figure>
-      <h2>측정 결과</h2>
-      <p>같은 약 3분 영상의 전체 처리 시간이 33분에서 8분 27초로 줄었다. 목표였던 10~15분 안쪽에 들어왔고, 메모리 초과 없이 S3 저장까지 끝났다.</p>
-      <blockquote><p>무료 서버에서 가장 효과가 컸던 최적화는, 더 빨리 하는 코드가 아니라 아예 하지 않아도 되는 일을 찾는 것이었다.</p></blockquote>
-      <div class="evidence-note"><strong>같은 입력으로 전후를 비교했다.</strong><p>동일한 약 3분 영상에서 33분 → 8분 27초를 확인했고, 변환 완료·S3 업로드·307 리다이렉트·실제 <code>video/mp4</code> 응답까지 배포 환경에서 검증했다.</p></div>
+      <h2>다시 돌려 보니 8분 27초가 걸렸다</h2>
+      <p>처음 측정에 쓴 약 3분 영상을 그대로 넣었다. 전체 처리 시간은 33분에서 8분 27초로 줄었고, 메모리 초과 없이 S3 업로드까지 끝났다. 영상 API의 307 리다이렉트와 실제 <code>video/mp4</code> 응답도 함께 확인했다.</p>
+      <p>결국 무료 서버에서 효과가 가장 컸던 건 코드를 더 빠르게 실행하는 방법보다, 반복하던 인코딩과 메타데이터 조회를 없애는 일이었다.</p>
+      <p class="article-source">확인 환경 · Render Free / 약 3분 입력 영상 / FFmpeg 합성 후 S3 저장 및 프론트 재생</p>
     </article><a class="back-link" href="/">← Back to all notes</a>
   </main>
-  <footer class="site-footer"><div class="shell"><a class="brand" href="/"><b>J</b><span>Jihyeon Yoo</span></a><p>From experiment to production.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
+  <footer class="site-footer"><div class="shell"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><p>직접 만들고 고친 과정을 기록합니다.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
 </body></html>

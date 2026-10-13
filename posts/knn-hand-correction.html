@@ -5,7 +5,7 @@
   <meta name="description" content="21.6만 손 프레임 기반 KNN 보정으로 수어 Avatar 자음 18종을 제작한 과정.">
   <title>KNN 수어 손 모양 보정 — Who Am I?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=7"><script src="/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=8"><script src="/script.js" defer></script>
 </head>
 <body class="article-page article-avatar">
   <div class="reading-progress" aria-hidden="true"></div>
@@ -43,11 +43,10 @@ baseline_q = original[frame][n].to_quaternion().normalized()
       <h2>반복 작업을 One-shot으로</h2>
       <p>하나의 Asset을 만들 때마다 추출, 보정, 리타게팅, Blender 실행, 결과 확인을 수동으로 반복하면 설정 차이가 생겼다. 입력 목록과 프로파일을 기준으로 전체 과정을 실행하고 결과 JSON을 남기는 스크립트를 만들었다.</p>
       <p>완성 영상뿐 아니라 다시 수정할 수 있는 Blender 파일과 중간 키포인트를 분리해 저장하고, 프레임 수가 유지됐는지도 별도로 검증했다.</p>
-      <h2>배운 점</h2>
-      <p>3D 좌표의 수치 오차가 작아도 사람은 손가락 방향의 이상을 바로 알아챈다. 평균 오차만 비교해서는 충분하지 않았고, 렌더링 결과를 같은 구간에서 반복해서 보는 과정이 꼭 필요했다.</p>
-      <blockquote><p>KNN을 썼다는 사실보다, 틀린 보정을 걸러낼 기준을 만든 일이 더 중요했다.</p></blockquote>
-      <div class="evidence-note"><strong>이 글의 수치는 저장된 실험 결과에서 가져왔다.</strong><p><code>experiments/consonants_knn_jihyeon_v1/summary.json</code>의 18개 클립·1,454프레임 결과를 사용했다. 화면 예시는 프로젝트 발표 자료의 모션 보정 섹션이다.</p></div>
+      <h2>숫자만 보고 끝내면 안 됐다</h2>
+      <p>3D 좌표의 오차가 작아도 렌더링한 손가락 방향은 눈에 바로 걸렸다. 그래서 평균 오차를 확인한 뒤 같은 구간을 Blender로 다시 렌더링해 손 모양이 실제로 유지되는지 봤다. 이번 작업에서는 KNN 자체보다 잘못된 후보를 걸러내는 기준이 더 중요했다.</p>
+      <p class="article-source">실험 데이터 · 자음 18개, 1,454프레임 · <code>experiments/consonants_knn_jihyeon_v1/summary.json</code></p>
     </article><a class="back-link" href="/">← Back to all notes</a>
   </main>
-  <footer class="site-footer"><div class="shell"><a class="brand" href="/"><b>J</b><span>Jihyeon Yoo</span></a><p>From experiment to production.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
+  <footer class="site-footer"><div class="shell"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><p>직접 만들고 고친 과정을 기록합니다.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
 </body></html>
