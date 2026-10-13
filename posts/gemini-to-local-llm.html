@@ -16,7 +16,7 @@
       <h2>시작은 API 비용 문제였다</h2>
       <p>초기 파이프라인은 Gemini에 한국어 자막을 보내 KSL Gloss 배열을 받았다. MVP를 확인하기에는 빨랐지만, 영상 하나가 여러 Segment로 나뉘면서 테스트할 때마다 호출이 쌓였다. 과금과 quota를 신경 쓰다 보니 마음 놓고 반복하기도 어려웠다.</p>
       <p>“그러면 작은 모델을 직접 학습하면 되지 않을까?”라는 생각으로 시작했다. Backend가 받는 <code>list[str]</code> 형태는 그대로 두고, Gemini 자리에 로컬 변환기를 끼우는 게 목표였다.</p>
-      <figure class="article-figure"><img src="/assets/case-study/llm-prompt.png" alt="Gloss 생성부터 allowed words 제약, 의미 보존, 미지원 단어 처리, 품질 검증까지 이어지는 흐름"><figcaption>모델의 문장 변환만으로 끝내지 않았다. 실제 수어 Asset 목록, 의미 보존, 미지원 단어 처리, 재검증을 하나의 흐름으로 묶었다.</figcaption></figure>
+      <figure class="article-figure"><img src="/assets/case-study/llm-prompt.png" alt="Gloss 생성부터 allowed words 제약과 품질 검증까지 이어지는 흐름"><figcaption>직접 수정한 Gloss 프롬프트와 검증 흐름입니다. 보유 Asset 제약, 의미 보존, 미지원 단어 처리와 재생성을 한 단계씩 나눴습니다.</figcaption></figure>
       <h2>첫 번째 시도: mT5 파인튜닝</h2>
       <p>한국어 문장을 입력하고 Gloss 토큰 시퀀스를 출력하는 seq2seq 문제로 정의했다. mT5-small을 사용하고 한정된 장비에서도 반복할 수 있도록 batch size 1, gradient accumulation, Adafactor 중심의 저메모리 학습 파이프라인을 만들었다.</p>
       <ul><li>입력: 한국어 문장</li><li>출력: Gloss를 전용 구분자로 연결한 문자열</li><li>검증: 저장된 모델을 새 객체로 다시 로드한 뒤 추론</li><li>평가: 예측과 정답의 Gloss token F1</li></ul>

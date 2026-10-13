@@ -16,7 +16,6 @@
       <h2>완료는 떴는데 33분이 지나 있었다</h2>
       <p>YouTube 자막도 가져왔고, Gloss와 수어 Asset도 제대로 매칭됐다. 끝까지 실행하면 결과 영상도 나왔다. 다만 약 3분짜리 영상을 한 번 만드는 데 33분이 걸렸다. Render 무료 인스턴스는 0.1 CPU, 512MB라 로컬에서 괜찮았던 코드가 그대로 버티지 못했다.</p>
       <div class="result-box"><div><strong>3 min</strong><span>source video</span></div><div><strong>33 min</strong><span>before</span></div><div><strong>8m 27s</strong><span>after</span></div></div>
-      <figure class="article-figure"><img src="/assets/case-study/architecture.png" alt="Frontend, FastAPI Backend, AI 수어 처리 파이프라인, S3로 구성된 서비스 아키텍처"><figcaption>사용자 요청은 비동기 Job으로 처리한다. 자막·Gloss·Motion 매칭을 거쳐 FFmpeg가 영상을 만들고, 결과는 S3 서명 URL로 재생한다.</figcaption></figure>
       <h2>일단 시간을 나눠서 재봤다</h2>
       <p>처음에는 Gemini 호출이 느린 줄 알았다. 자막, Gloss, S3, Timeline, FFmpeg 앞뒤에 시간을 찍어 보니 예상이 틀렸다. 같은 수어 클립을 계속 ffprobe로 읽고, 이미 규격이 맞는 영상까지 다시 인코딩하는 구간이 대부분을 차지했다.</p>
       <h2>1. 준비된 클립을 다시 인코딩하지 않기</h2>
@@ -43,7 +42,6 @@ return s3.generate_presigned_url(
 )</code></pre></div>
       <h2>배포 환경에서 함께 해결한 문제</h2>
       <p>Render 서버 IP에서는 YouTube 자막 조회가 차단될 수 있었다. 해당 오류만 감지해 Gemini가 공개 영상의 음성을 직접 전사하도록 Fallback을 추가했다. 로컬의 AWS CLI 프로필도 컨테이너에는 없기 때문에 Render에서는 환경변수 기반 인증을 우선 사용했다.</p>
-      <figure class="article-figure"><img src="/assets/case-study/troubleshooting.png" alt="수어 Asset 부족, YouTube API 전환, Gemini 429 오류의 원인과 해결 과정"><figcaption>기능 구현 뒤 실제 배포에서 드러난 세 가지 문제. Asset 미매칭은 캡션으로 보존하고, YouTube 데이터 경로와 Gemini 호출 구조는 실패 원인에 맞춰 분리했다.</figcaption></figure>
       <h2>다시 돌려 보니 8분 27초가 걸렸다</h2>
       <p>처음 측정에 쓴 약 3분 영상을 그대로 넣었다. 전체 처리 시간은 33분에서 8분 27초로 줄었고, 메모리 초과 없이 S3 업로드까지 끝났다. 영상 API의 307 리다이렉트와 실제 <code>video/mp4</code> 응답도 함께 확인했다.</p>
       <p>결국 무료 서버에서 효과가 가장 컸던 건 코드를 더 빠르게 실행하는 방법보다, 반복하던 인코딩과 메타데이터 조회를 없애는 일이었다.</p>
