@@ -116,3 +116,10 @@ body{background:#fff;font-family:"Inter","Noto Sans KR",sans-serif}
 .blog-post{position:relative}.blog-post::after{content:"";position:absolute;right:0;bottom:-1px;width:0;height:2px;background:#3182f6;transition:width .25s ease}.blog-post:hover::after{width:100%}
 .article-head::before{content:"WHO0OAMI / DEV NOTE"}.article-head{position:relative}.article-head::after{content:"";position:absolute;right:0;bottom:-1px;width:72px;height:3px;background:#3182f6}.article h2{letter-spacing:-.035em}.article p{letter-spacing:-.012em}.article-figure img{box-shadow:none}.article-figure figcaption{text-align:left}.evidence-note{border-left:3px solid #3182f6;border-radius:4px 12px 12px 4px}
 @media(max-width:600px){.brand-wordmark small{display:none}.blog-intro::after{display:none}.intro-note{padding:20px}.article-head::after{width:46px}}
+
+/* Plain article lists and inline code */
+.article ul,.article ol{margin:0 0 28px;padding:0 0 0 24px;border:0;border-radius:0;background:transparent}
+.article li{margin:8px 0;color:var(--ink);font-weight:500}
+.article li::marker{color:var(--ink)}
+.article code{padding:0;color:var(--ink);background:transparent;border-radius:0;font-weight:700}
+.article .code-window code{color:inherit;background:none;font-weight:400}
