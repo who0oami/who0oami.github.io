@@ -5,7 +5,7 @@
   <meta name="description" content="21.6만 손 프레임 기반 KNN 보정으로 수어 Avatar 자음 18종을 제작한 과정.">
   <title>KNN 수어 손 모양 보정 — Who Am I?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=11"><script src="/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=12"><script src="/script.js" defer></script>
 </head>
 <body class="article-page article-avatar">
   <div class="reading-progress" aria-hidden="true"></div>
@@ -21,7 +21,7 @@
       <h2>BiGRU와 KNN을 함께 비교했다</h2>
       <p>처음에는 BiGRU 디노이저를 학습했다. 합성 노이즈 데이터와 실제 추출–정답 Pair를 함께 넣었지만, 데이터 분포가 조금만 달라져도 결과 편차가 컸다. 학습 로그는 좋아 보여도 Blender에서 보면 손가락이 다시 무너지는 경우가 있었다.</p>
       <p>그래서 가까운 기준 손 자세를 바로 찾아오는 KNN도 붙였다. 어느 프레임을 참고했는지 눈으로 확인할 수 있고, 기준 데이터를 추가하면 재학습 없이 반영되는 점이 당시 일정에는 더 잘 맞았다.</p>
-      <figure class="article-figure"><img src="/assets/case-study/motion-training.png" alt="아바타 손가락 왜곡 문제와 KNN 보정 전후 비교"><figcaption>제가 맡은 손 모양 보정 실험 부분입니다. 보정 전 손가락 왜곡을 확인하고, 같은 동작에 KNN을 적용한 결과를 나란히 비교했습니다.</figcaption></figure>
+      <figure class="article-figure"><img src="/assets/case-study/blogstyle-knn-before-after.jpg" alt="아바타 리타게팅에서 발생한 손가락 왜곡 원인과 KNN 보정 전후 비교"><figcaption>새 발표자료에 정리한 손 모양 보정 결과입니다. 리타게팅 뒤 틀어진 손가락을 확인하고, 같은 동작에 KNN을 적용한 전후 모습을 비교했습니다.</figcaption></figure>
       <h2>단순 KNN은 오히려 나빠졌다</h2>
       <p>그런데 첫 결과는 예상과 반대였다. 가까운 자세를 그대로 섞으니 모양은 얼핏 자연스러워도 원본 손가락 방향과 멀어졌다. 자음 18개를 같은 조건으로 재보니 Baseline 오차는 27.98°, 단순 KNN은 29.13°였다. 숫자로도 더 나빠진 게 확인됐다.</p>
       <p>최종 보정은 KNN 후보와 관측 자세의 방향 일치도를 다시 비교했다. KNN이 원본 관측보다 나쁜 관절은 교체하지 않고, 허용 가능한 회전량 안에서만 반영했다. 그 결과 평균 오차가 20.69°로 낮아졌고 18개 클립 모두에서 Baseline과 단순 KNN보다 개선됐다.</p>
@@ -38,7 +38,7 @@ baseline_q = original[frame][n].to_quaternion().normalized()
       <p>서비스가 보유한 약 3,000개 Asset에는 자음 손 모양 일부가 없었다. 자음 18종을 WORD3002~WORD3019로 정의하고 총 1,454프레임을 처리했다.</p>
       <div class="result-box"><div><strong>1,500</strong><span>reference signs</span></div><div><strong>216K</strong><span>hand frames</span></div><div><strong>18</strong><span>new assets</span></div></div>
       <p>보정된 3D 좌표를 F10·F20 VRM Avatar의 뼈대에 리타게팅하고 Blender에서 렌더링했다. Baseline, KNN, 손가락 방향 보정 결과를 같은 구간으로 출력해 손 모양과 프레임 안정성을 확인했다.</p>
-      <figure class="article-figure"><img src="/assets/case-study/motion-results.png" alt="KNN 손동작 보정 흐름과 다각도 Avatar 검증 결과"><figcaption>21개 손 좌표를 관절 각도로 바꿔 기준 데이터와 비교하고, 여러 각도의 Avatar 렌더링으로 보정 결과를 확인했습니다.</figcaption></figure>
+      <figure class="article-figure"><img src="/assets/case-study/blogstyle-knn-process.jpg" alt="손 랜드마크를 관절 각도로 변환해 기준 데이터와 비교하고 보정하는 KNN 처리 과정"><figcaption>21개 손 좌표를 관절 각도로 바꿔 기준 데이터와 비교한 과정입니다. 가까운 자세를 그대로 쓰지 않고, 방향 오차가 줄어드는 후보만 반영했습니다.</figcaption></figure>
       <h2>반복 작업을 One-shot으로</h2>
       <p>하나의 Asset을 만들 때마다 추출, 보정, 리타게팅, Blender 실행, 결과 확인을 수동으로 반복하면 설정 차이가 생겼다. 입력 목록과 프로파일을 기준으로 전체 과정을 실행하고 결과 JSON을 남기는 스크립트를 만들었다.</p>
       <p>완성 영상뿐 아니라 다시 수정할 수 있는 Blender 파일과 중간 키포인트를 분리해 저장하고, 프레임 수가 유지됐는지도 별도로 검증했다.</p>

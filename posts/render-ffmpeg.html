@@ -5,7 +5,7 @@
   <meta name="description" content="Render 무료 인스턴스에서 FFmpeg 영상 합성 시간을 33분에서 8분 27초로 줄인 과정.">
   <title>Render에서 FFmpeg를 4배 빠르게 — Who Am I?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=11"><script src="/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles.css?v=12"><script src="/script.js" defer></script>
 </head>
 <body class="article-page article-infra">
   <div class="reading-progress" aria-hidden="true"></div>
@@ -16,6 +16,7 @@
       <h2>완료는 떴는데 33분이 지나 있었다</h2>
       <p>YouTube 자막도 가져왔고, Gloss와 수어 Asset도 제대로 매칭됐다. 끝까지 실행하면 결과 영상도 나왔다. 다만 약 3분짜리 영상을 한 번 만드는 데 33분이 걸렸다. Render 무료 인스턴스는 0.1 CPU, 512MB라 로컬에서 괜찮았던 코드가 그대로 버티지 못했다.</p>
       <div class="result-box"><div><strong>3 min</strong><span>source video</span></div><div><strong>33 min</strong><span>before</span></div><div><strong>8m 27s</strong><span>after</span></div></div>
+      <figure class="article-figure article-figure-compact"><img src="/assets/case-study/blogstyle-jihyeon-role-crop.jpg" alt="유지현의 AI, 3D Avatar, 배포 담당 업무"><figcaption>새 발표자료에 정리한 제 담당 범위입니다. 3D 손 모션 보정과 mT5·Local LLM 실험부터 Vercel·Render 배포, S3 결과 저장까지 맡았습니다.</figcaption></figure>
       <h2>일단 시간을 나눠서 재봤다</h2>
       <p>처음에는 Gemini 호출이 느린 줄 알았다. 자막, Gloss, S3, Timeline, FFmpeg 앞뒤에 시간을 찍어 보니 예상이 틀렸다. 같은 수어 클립을 계속 ffprobe로 읽고, 이미 규격이 맞는 영상까지 다시 인코딩하는 구간이 대부분을 차지했다.</p>
       <h2>1. 준비된 클립을 다시 인코딩하지 않기</h2>
