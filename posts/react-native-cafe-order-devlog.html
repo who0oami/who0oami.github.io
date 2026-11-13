@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="React Native·TypeScript 카페 주문 앱을 만들며 메뉴 API 오류 처리와 상태 분리를 고민한 첫 개발 기록.">
+  <meta property="og:title" content="예쁜 화면보다 실패하는 API부터 — Who Am I?">
+  <title>예쁜 화면보다 실패하는 API부터 — Who Am I?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=12"><script src="/script.js" defer></script>
+</head>
+<body class="article-page article-avatar">
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header class="site-header"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><nav><a href="/">Work</a><a href="/#writing">Notes</a><a href="/about.html">About</a></nav><a class="header-link" href="https://github.com/who0oami" target="_blank" rel="noreferrer">GitHub ↗</a></header>
+  <main class="article-shell">
+    <header class="article-head">
+      <span class="tag avatar">MOBILE / REACT NATIVE</span>
+      <h1>예쁜 화면보다 실패하는 API부터</h1>
+      <p class="lead">React Native로 카페 주문 앱의 세 화면을 만들었다. 메뉴가 잘 보이는 것보다, 메뉴를 불러오지 못했을 때 앱이 어떻게 반응하는지 먼저 확인했다.</p>
+      <time datetime="2026-11-12">2026.11.12 · 유지현 · Day 01 · 7 min read</time>
+    </header>
+    <article class="article">
+      <h2>왜 또 하나의 카페 주문 앱을 만들었나</h2>
+      <p>Flutter와 SwiftUI에서는 모바일 화면과 FastAPI 서버를 연결해본 적이 있다. 하지만 React Native는 다른 방식으로 컴포넌트와 상태를 다룬다. 소프트웨어 개발 일경험 JD에 RN 전환, API 연동, QA, 코드리뷰가 명시돼 있어 가장 기본적인 기능부터 확인해 보기로 했다. 메뉴 목록, 메뉴 상세, 장바구니. 이름은 <strong>Cup &amp; Go</strong>로 정했다.</p>
+      <p>AI 코딩 도구의 도움으로 구현을 진행했지만, 단순히 화면을 완성했다는 기록으로 끝내고 싶지 않았다. 어떤 데이터를 어디에서 관리할지, 실패하는 요청은 어떻게 안내할지, 무엇을 테스트했는지 설명 가능한 구조가 목표였다.</p>
+      <div class="result-box result-four"><div><strong>3</strong><span>app screens</span></div><div><strong>7</strong><span>menu items</span></div><div class="result-best"><strong>6 / 6</strong><span>automated tests</span></div><div><strong>503</strong><span>error scenario</span></div></div>
+      <h2>화면에서 API 호출을 분리했다</h2>
+      <p>화면 안에 HTTP 요청, 로딩 상태, 오류 메시지까지 모두 넣으면 수정 범위가 불필요하게 커진다. 메뉴 요청은 <code>services/menu-api.ts</code>, 비동기 상태는 <code>hooks/use-menu.ts</code>, 렌더링은 화면 컴포넌트에 두었다. 카테고리 필터와 검색은 이미 받아 온 목록에 적용했다.</p>
+      <div class="code-window"><div class="code-window__bar"><i></i><i></i><i></i><span>src/hooks/use-menu.ts · excerpt</span></div><pre><code>useEffect(() =&gt; {
+  const controller = new AbortController();
+  getMenu(controller.signal)
+    .then(items =&gt; {
+      if (!controller.signal.aborted) {
+        setState({ items, loading: false, error: null });
+      }
+    })
+    .catch(error =&gt; {
+      if (!controller.signal.aborted) {
+        setState(current =&gt; ({
+          ...current, loading: false,
+          error: error instanceof Error ? error.message : '요청 실패'
+        }));
+      }
+    });
+  return () =&gt; controller.abort();
+}, [requestId]);</code></pre></div>
+      <p><code>AbortController</code>는 화면이 떠난 뒤 이전 응답이 늦게 도착해 상태를 바꾸는 문제를 피하기 위해 넣었다. 재시도 동작도 별도 상태로 관리하도록 했다.</p>
+      <h2>실패 응답을 의도적으로 만들었다</h2>
+      <p>외부 API의 상태에 테스트가 좌우되지 않도록 Node.js로 메뉴 조회용 모의 API를 만들었다. <code>GET /menu</code>는 메뉴 데이터를, <code>?fail=1</code>은 의도적인 HTTP 503 응답을 반환한다. 서버가 꺼져 있는 경우와 오류 응답을 받는 경우 모두 사용자에게 안내하고 다시 시도할 수 있도록 했다.</p>
+      <ul><li>정상 요청: 메뉴 일곱 개 표시</li><li>로딩: 요청 중 상태를 분리해 표시</li><li>오류: 실패 원인을 안내하고 재시도 제공</li><li>장바구니: 수량 합산과 총액 계산을 순수 함수로 분리해 검사</li></ul>
+      <h2>iOS와 Android에서 localhost가 다른 이유</h2>
+      <p>iOS 시뮬레이터와 웹에서는 개발 머신의 <code>localhost:4000</code>을 사용할 수 있다. 반면 Android 에뮬레이터의 localhost는 에뮬레이터 자신이기 때문에 호스트를 가리키는 <code>10.0.2.2:4000</code>을 기본값으로 분기했다. 실제 휴대전화에서는 Mac과 같은 네트워크의 LAN IP가 필요하다.</p>
+      <p>이 부분은 코드와 실행 안내에 반영했지만, <strong>실제 iOS·Android 시뮬레이터 실행은 아직 검증하지 않았다.</strong> 실행하도록 코드를 구성한 것과 기기에서 검증했다는 것은 구분해서 기록할 생각이다.</p>
+      <h2>결과와 다음 단계</h2>
+      <p>초기 버전에서는 TypeScript 검사, ESLint 검사, Node 자동 테스트 6개, Expo 웹 번들 생성을 확인했다. 하지만 이 결과만으로 네이티브 UI 동작까지 증명할 수는 없다. 다음으로 장바구니의 저장 위치를 다시 정하고, 화면 전환과 앱 재실행 시나리오를 점검하려 한다.</p>
+      <p>작은 앱을 만들면서도 결국 중요한 건 <strong>데이터가 정상적으로 들어올 때보다 들어오지 않을 때의 흐름</strong>이었다. 화면 하나라도 실패 조건과 상태 관리까지 설명할 수 있도록 만들고 싶다.</p>
+      <p class="article-source">기록 범위 · TypeScript / React Native / Expo / Node 모의 API · 초기 자동 테스트 6개 통과 · 네이티브 QA 미완료</p>
+    </article>
+    <a class="back-link" href="/">← Back to all notes</a>
+  </main>
+  <footer class="site-footer"><div class="shell"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><p>직접 만들고 고친 과정을 기록합니다.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
+</body></html>
