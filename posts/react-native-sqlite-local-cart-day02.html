@@ -46,6 +46,12 @@ ON CONFLICT(item_id) DO UPDATE SET
 <h2>이번 변경에서 배운 것</h2>
 <p>로컬 SQLite를 사용한다고 서버 DB가 필요 없어진 것은 아니다. 장바구니처럼 기기에서 즉시 수정해야 하는 데이터와, 주문처럼 여러 시스템이 공유하고 책임져야 하는 데이터는 성격이 다르다. <strong>DB를 더 많이 쓰는 것보다 저장 위치의 경계를 설명할 수 있는 구조</strong>가 중요하다는 걸 배웠다.</p>
 <p>다음은 Mac에서 양쪽 시뮬레이터를 직접 실행하고, 재실행·오프라인·오류 복구 흐름을 화면으로 검증하는 작업이다. 아직 확인되지 않은 부분은 결과로 포장하지 않고 체크리스트에 남겨둔다.</p>
+<h2>11월 14일 추가 QA — 장바구니와 주문 내역을 분리하다</h2>
+<p>웹 체험판에서 상품을 담은 뒤 목록이 보여야 하고, 주문 확정은 별도 단계여야 한다는 점을 다시 살폈다. 체험판에는 주문 확인과 주문 내역 탭을 추가했다. 주문 확정 후에도 브라우저에 저장된 상품명·수량·금액을 다시 표시한다.</p>
+<div class="result-box"><div><strong>10 / 10</strong><span>Chromium UI scenarios</span></div><div><strong>4 / 4</strong><span>Node / SQLite tests</span></div><div><strong>0</strong><span>page JS errors</span></div></div>
+<p>GitHub에 게시된 HTML과 동일한 Git blob(63664e5)을 실제 Chromium 144 브라우저의 로컬 문서에 렌더링하고 메뉴 선택, 장바구니 조회·수정·삭제, 주문 확인·확정·내역 조회를 점검했다. 브라우저 저장소 접근 제한 때문에 정상 저장·복원 시나리오는 모의 localStorage와 스냅샷으로 검증했다. 저장소를 사용할 수 없는 상태에서도 오류 안내가 표시되고, 주문 내역 저장 실패 후 장바구니가 남는 것은 실제 브라우저에서 확인했다.</p>
+<p>별도로 Node.js 서버와 SQLite SQL 테스트 4개도 재실행해 통과했다. 최신 GitHub Pages <a href="https://github.com/who0oami/who0oami.github.io/actions/runs/43582975925">배포 기록</a>은 성공 상태다. 그러나 공개 사이트의 실접속, Safari, Expo Go, iOS·Android 네이티브 실행은 아직 검증하지 못했다. 웹 체험판의 결과를 네이티브 SQLite 실행 결과로 대체하지 않는다.</p>
+<p class="article-source">추가 검증 · 2026.11.14 / Chromium 144.0.7559.96 / 로컬 HTML 렌더링 및 모의 저장소 / Node 22.16 / 네이티브 QA 대기</p>
 <p class="article-source">기록 범위 · Expo SQLite / Node.js SQLite / GET·POST API / 서버 자동 테스트 · iOS·Android 기기 QA 미완료 · 결제 없는 데모</p>
 </article><a class="back-link" href="/">← Back to all notes</a></main>
 <footer class="site-footer"><div class="shell"><a class="brand brand-wordmark" href="/"><b>W</b><span>WHO AM I?<small>@who0oami</small></span></a><p>직접 만들고 고친 과정을 기록합니다.</p><div><span>© 2026</span><a href="https://github.com/who0oami">GitHub ↗</a></div></div></footer>
